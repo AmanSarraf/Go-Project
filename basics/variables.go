@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func variables() {
 
 	fmt.Println("Hello and Welcome ! let's see different types of variables and datatypes")
 

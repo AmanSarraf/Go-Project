@@ -23,7 +23,7 @@ func main() {
 	}
 	fmt.Printf("The length of the file is %v\n Now reading from file \n", length)
 
-	reader("/home/aman/go/src/github.com/aman/basics/FileIO/sample.txt")
+	reader("./sample.txt")
 
 }
 

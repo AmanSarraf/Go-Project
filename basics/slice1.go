@@ -5,7 +5,7 @@ import (
 	"strings"
 )
 
-func main() {
+func slice1() {
 	fmt.Println("hello")
 	sample := []string{"aman kumar", "raman baba", "sunil mahto", "mohan prasad"}
 	var names []string

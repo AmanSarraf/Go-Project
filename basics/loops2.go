@@ -4,7 +4,7 @@ import (
 	"fmt"
 )
 
-func main() {
+func loops2() {
 	fmt.Println("Hello")
 
 	for i := 1; i <= 100; i++ {

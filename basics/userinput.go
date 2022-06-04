@@ -6,7 +6,7 @@ import (
 	"os"
 )
 
-func main() {
+func userinput() {
 
 	welcome := "Welcome to the the coffee"
 

@@ -1,5 +1,7 @@
 package main
 
+import "fmt"
+
 func main() {
-	Loops()
+	fmt.Print("This is main")
 }

@@ -2,7 +2,7 @@ package main
 
 import "fmt"
 
-func main() {
+func userio() {
 
 	var fname string
 	var lname string

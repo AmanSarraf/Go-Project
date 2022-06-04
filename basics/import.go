@@ -5,7 +5,7 @@ import (
 	// "rsc.io/quote"
 )
 
-func main() {
+func importy() {
 
 	fmt.Println("quote.Go()")
 }
