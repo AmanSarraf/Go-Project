@@ -14,14 +14,14 @@ func main() {
 	http.HandleFunc("/hello", hello)
 	http.HandleFunc("/headers", headers)
 	http.HandleFunc("/readme", readdata)
+	http.ListenAndServe(":8000", nil)
+	fmt.Println("listeninging on port 8000")
 
-	fmt.Println("listeninging on port 8080")
-	http.ListenAndServe(":8080", nil)
 }
 
 // readdata expects a HTTP post request with a json body of `{"name":"bob"}`
 func readdata(w http.ResponseWriter, req *http.Request) {
-	bob := &BobStruct{}
+	bob := &BobrealnameStruct{}
 	err := json.NewDecoder(req.Body).Decode(&bob)
 	if err != nil {
 		fmt.Println("error at readddata")
