@@ -70,6 +70,7 @@ func updateBooks(w http.ResponseWriter, r *http.Request) {
 			newbook.ID = strconv.Itoa(r1.Intn(100))
 			books = append(books, newbook)
 			json.NewEncoder(w).Encode(newbook)
+			return
 
 		}
 
@@ -129,8 +130,8 @@ func main() {
 
 	Router.HandleFunc("/books", getBooks).Methods("GET")
 	Router.HandleFunc("/books", createBooks).Methods("POST")
-	Router.HandleFunc("/books", updateBooks).Methods("PUT")
-	Router.HandleFunc("/books", deleteBook).Methods("DELETE")
+	Router.HandleFunc("/books{ID}", updateBooks).Methods("PUT")
+	Router.HandleFunc("/books/{ID}", deleteBook).Methods("DELETE")
 	Router.HandleFunc("/books/{ID}", getBook).Methods("GET")
 	fmt.Println("server started at port 8080")
 	if err := http.ListenAndServe(":8080", Router); err != nil {

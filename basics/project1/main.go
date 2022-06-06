@@ -22,6 +22,7 @@ func main() {
 // readdata expects a HTTP post request with a json body of `{"name":"bob"}`
 func readdata(w http.ResponseWriter, req *http.Request) {
 	bob := &BobrealnameStruct{}
+
 	err := json.NewDecoder(req.Body).Decode(&bob)
 	if err != nil {
 		fmt.Println("error at readddata")
