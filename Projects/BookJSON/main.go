@@ -103,6 +103,8 @@ func getBook(w http.ResponseWriter, r *http.Request) {
 
 	params := mux.Vars(r) // get the params
 
+	fmt.Println(params)
+
 	for _, value := range books {
 
 		if value.ID == params["ID"] {
