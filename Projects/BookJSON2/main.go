@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strconv"
 )
 
 type Book struct {
@@ -30,18 +31,22 @@ var books []Book
 func (b *Books) book(w http.ResponseWriter, r *http.Request) {
 	// if r.Method == POST
 	switch r.Method {
-	case "POST": //Retriving a book with Id number
+	case "GET": //Retriving a book with Id number
 		{
+
 			w.Header().Set("content-type", "application/json")
-			jsonreqestfromweb := &Book{}
-			err := json.NewDecoder(r.Body).Decode(&jsonreqestfromweb)
+			val := r.FormValue("id")
+			id, err := strconv.Atoi(val)
 			if err != nil {
-				fmt.Println(err)
-				return
+				panic(err)
+			}
+			if id >= len(b.Books) {
+				w.WriteHeader(http.StatusNotFound)
+
+			} else {
+				json.NewEncoder(w).Encode(b.Books[id])
 			}
 
-			json.NewEncoder(w).Encode(b.Books[jsonreqestfromweb.Id])
-			break
 		}
 	case "PUT": // adding new book
 		{
@@ -49,7 +54,16 @@ func (b *Books) book(w http.ResponseWriter, r *http.Request) {
 			w.Header().Set("content-type", "application/json")
 			newbook := Book{}
 			_ = json.NewDecoder(r.Body).Decode(&newbook)
-			b.Books = append(b.Books, newbook)
+			for _, item := range b.Books {
+				if newbook.Id == item.Id {
+					w.WriteHeader(http.StatusBadRequest)
+					break
+				} else {
+					b.Books = append(b.Books, newbook)
+					break
+				}
+			}
+
 			json.NewEncoder(w).Encode(newbook)
 			break
 
