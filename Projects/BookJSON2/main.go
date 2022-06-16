@@ -21,91 +21,107 @@ type Author struct {
 	Lastname  string
 }
 
-type Books struct {
+type BookHandler struct {
 	Books []Book `json:"book"`
 }
 
 //fake db
 var books []Book
 
-func (b *Books) book(w http.ResponseWriter, r *http.Request) {
-	// if r.Method == POST
+func (b *BookHandler) book(w http.ResponseWriter, r *http.Request) {
 	switch r.Method {
-	case "GET": //Retriving a book with Id number
+	case http.MethodGet: //Retriving a book with Id number
 		{
 
-			w.Header().Set("content-type", "application/json")
 			val := r.FormValue("id")
+			if val == "" {
+				if err := json.NewEncoder(w).Encode(b.Books); err != nil {
+					log.Println(err)
+					return
+				}
+				return
+			}
+
+			if val == "break" {
+				w.WriteHeader(http.StatusBadRequest)
+				return
+			}
+
 			id, err := strconv.Atoi(val)
 			if err != nil {
 				panic(err)
 			}
-			if id >= len(b.Books) {
-				w.WriteHeader(http.StatusNotFound)
 
-			} else {
-				json.NewEncoder(w).Encode(b.Books[id])
+			defer r.Body.Close()
+			for i, value := range b.Books {
+				if value.Id == id {
+					if err := json.NewEncoder(w).Encode(b.Books[i]); err != nil {
+						log.Println(err)
+
+					}
+					return
+				}
+
 			}
 
 		}
-	case "PUT": // adding new book
-		{
 
-			w.Header().Set("content-type", "application/json")
+	case http.MethodPost: // adding new book
+		{
 			newbook := Book{}
 			_ = json.NewDecoder(r.Body).Decode(&newbook)
 			for _, item := range b.Books {
 				if newbook.Id == item.Id {
 					w.WriteHeader(http.StatusBadRequest)
-					break
-				} else {
-					b.Books = append(b.Books, newbook)
-					break
+					return
 				}
 			}
+			b.Books = append(b.Books, newbook)
 
-			json.NewEncoder(w).Encode(newbook)
-			break
-
+			if err := json.NewEncoder(w).Encode(newbook); err != nil {
+				log.Println(err)
+			}
 		}
-	case "DELETE": //Delete a specific book data
+
+	case http.MethodDelete: //Delete a specific book data
 		{
 			w.Header().Set("content-type", "application/json")
 			jsonrequestfromweb := Book{}
 			_ = json.NewDecoder(r.Body).Decode(&jsonrequestfromweb)
 			b.Books = append(b.Books[:jsonrequestfromweb.Id], b.Books[jsonrequestfromweb.Id+1:]...)
-			json.NewEncoder(w).Encode(b.Books)
-			break
+			//json.NewEncoder(w).Encode(b.Books)
+
 		}
-	case "PATCH": //Update an existing book
+	case http.MethodPut: //Update an existing book
 		{
 			w.Header().Set("content-type", "application/json")
 			jsonrequestfromweb := Book{}
 			_ = json.NewDecoder(r.Body).Decode(&jsonrequestfromweb)
 			b.Books = append(b.Books[:jsonrequestfromweb.Id], b.Books[jsonrequestfromweb.Id+1:]...)
 			b.Books = append(b.Books, jsonrequestfromweb)
-			json.NewEncoder(w).Encode(b.Books)
-			break
+			//json.NewEncoder(w).Encode(b.Books)
+
 		}
 	}
 }
 
-func (b *Books) allbooks(w http.ResponseWriter, r *http.Request) {
+func (b *BookHandler) allbooks(w http.ResponseWriter, r *http.Request) {
 
 	switch r.Method {
 
-	case "GET": //fetch the list of all books
+	case http.MethodGet: //fetch the list of all books
 		{
-			w.Header().Set("content-type", "application/json")
-			json.NewEncoder(w).Encode(b.Books)
-			break
+			//w.Header().Set("content-type", "application/json")
+			if err := json.NewEncoder(w).Encode(b.Books); err != nil {
+				log.Println(err)
+			}
+
 		}
-	case "DELETE": //delete all books
+	case http.MethodDelete: //delete all books
 		{
 			w.Header().Set("content-type", "application/json")
 			b.Books = nil
-			json.NewEncoder(w).Encode(b.Books)
-			break
+			//json.NewEncoder(w).Encode(b.Books)
 
 		}
 	}
@@ -113,10 +129,11 @@ func (b *Books) allbooks(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	fmt.Println("Welcome")
+
 	//seed value
-	bs := &Books{}
-	b1 := Book{Id: 0, Isbn: "24242242", Price: 856, Name: "Harry Potter", Author: &Author{Firstname: "JK", Lastname: "Roweling"}}
-	b2 := Book{Id: 1, Isbn: "15454832", Price: 745, Name: "How to win friend", Author: &Author{Firstname: "Dan", Lastname: "Carnegi"}}
+	bs := &BookHandler{}
+	b1 := Book{Id: 23, Isbn: "24242242", Price: 856, Name: "Harry Potter", Author: &Author{Firstname: "JK", Lastname: "Roweling"}}
+	b2 := Book{Id: 12, Isbn: "15454832", Price: 745, Name: "How to win friend", Author: &Author{Firstname: "Dan", Lastname: "Carnegi"}}
 	bs.Books = append(bs.Books, b1)
 	bs.Books = append(bs.Books, b2)
 
