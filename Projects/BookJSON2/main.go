@@ -35,6 +35,7 @@ func (b *BookHandler) book(w http.ResponseWriter, r *http.Request) {
 
 			val := r.FormValue("id")
 			if val == "" {
+				w.WriteHeader(http.StatusInternalServerError)
 				if err := json.NewEncoder(w).Encode(b.Books); err != nil {
 					log.Println(err)
 					return
@@ -49,21 +50,19 @@ func (b *BookHandler) book(w http.ResponseWriter, r *http.Request) {
 
 			id, err := strconv.Atoi(val)
 			if err != nil {
-				panic(err)
+				log.Println(err)
+				w.WriteHeader(http.StatusBadGateway)
 			}
 
-			defer r.Body.Close()
-			for i, value := range b.Books {
+			for _, value := range b.Books {
 				if value.Id == id {
-					if err := json.NewEncoder(w).Encode(b.Books[i]); err != nil {
+					if err := json.NewEncoder(w).Encode(value); err != nil {
+						w.WriteHeader(http.StatusInternalServerError)
 						log.Println(err)
-
 					}
 					return
 				}
-
 			}
-
 		}
 
 	case http.MethodPost: // adding new book
@@ -99,8 +98,6 @@ func (b *BookHandler) book(w http.ResponseWriter, r *http.Request) {
 			_ = json.NewDecoder(r.Body).Decode(&jsonrequestfromweb)
 			b.Books = append(b.Books[:jsonrequestfromweb.Id], b.Books[jsonrequestfromweb.Id+1:]...)
 			b.Books = append(b.Books, jsonrequestfromweb)
-			//json.NewEncoder(w).Encode(b.Books)
-
 		}
 	}
 }
@@ -121,8 +118,6 @@ func (b *BookHandler) allbooks(w http.ResponseWriter, r *http.Request) {
 		{
 			w.Header().Set("content-type", "application/json")
 			b.Books = nil
-			//json.NewEncoder(w).Encode(b.Books)
-
 		}
 	}
 }
