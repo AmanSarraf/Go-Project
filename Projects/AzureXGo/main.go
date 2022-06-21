@@ -17,7 +17,7 @@ type myurl struct {
 func main() {
 
 	port := os.Getenv("PORT")
-	http.HandleFunc("/compvis", compvs)
+	http.HandleFunc("/", compvs)
 	if port == "" {
 		port = "8080"
 	}

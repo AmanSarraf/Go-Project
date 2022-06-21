@@ -6,12 +6,21 @@ import (
 )
 
 func compvs(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodPost:
+		{
+			newurl := myurl{}
+			_ = json.NewDecoder(r.Body).Decode(&newurl)
 
-	newurl := myurl{}
-	_ = json.NewDecoder(r.Body).Decode(&newurl)
+			value := newurl.Url
+			BatchReadFileRemoteImage(value)
 
-	value := newurl.Url
-	BatchReadFileRemoteImage(value)
-	return
+		}
+	case http.MethodGet:
+		{
+			url := "https:" + r.FormValue("url")
+			BatchReadFileRemoteImage(url)
+		}
+	}
 
 }
