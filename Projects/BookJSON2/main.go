@@ -93,7 +93,6 @@ func (b *BookHandler) book(w http.ResponseWriter, r *http.Request) {
 
 	case http.MethodDelete: //Delete a specific book data
 		{
-			w.Header().Set("content-type", "application/json")
 
 			id, err := strconv.Atoi(path[2])
 			if err != nil {
