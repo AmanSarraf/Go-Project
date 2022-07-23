@@ -158,8 +158,6 @@ func (b *BookHandler) allbooks(w http.ResponseWriter, r *http.Request) {
 		}
 	case http.MethodDelete: //delete all books
 		{
-			w.Header().Set("content-type", "application/json")
-
 			b.Books = nil
 			fmt.Fprintln(w, "Library Cleared")
 		}
