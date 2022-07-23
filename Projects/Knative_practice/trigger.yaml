@@ -1,0 +1,8 @@
+apiVersion: eventing.knative.dev/v1
+kind: Trigger
+metadata:
+  name: aman-trigger
+spec:
+  broker: aman-broker
+  subscriber:
+    uri: http://sockeye.aman.svc.cluster.local

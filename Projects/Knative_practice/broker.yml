@@ -1,0 +1,8 @@
+apiVersion: eventing.knative.dev/v1
+kind: Broker
+metadata:
+   name: aman-broker
+   namespace: aman
+   annotations:
+     eventing.knative.dev/broker.class: MTChannelBasedBroker
+

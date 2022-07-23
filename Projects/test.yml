@@ -1,0 +1,7 @@
+curl -i http://cloudevents-player.aman.192.168.39.149.sslip.io:30496\
+    -H "Content-Type: application/json" \
+    -H "Ce-Id: 123456789" \
+    -H "Ce-Specversion: 1.0" \
+    -H "Ce-Type: some-type" \
+    -H "Ce-Source: command-line" \
+    -d '{"msg":"Hello Aman sarraf!"}'

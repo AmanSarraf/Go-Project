@@ -1,0 +1,14 @@
+apiVersion: sources.knative.dev/v1
+kind: PingSource
+metadata:
+  name: ping-source
+  namespace: aman
+spec:
+  schedule: "*/1 * * * *"
+  data: '{"message": "Hello AMAN ! Congratulations"}'
+  sink:
+    ref:
+      apiVersion: eventing.knative.dev/v1
+      kind: Broker
+      name: aman-broker
+      namespace: aman
